@@ -1,0 +1,236 @@
+# L. monocytogenes SNP evaluation
+#Connect to Roar (change “mxm6884” to your PSU username)
+ssh mxm6884@submit.aci.ics.psu.edu
+
+#Create a directory to add all outputs of the sequences (we will download sequencing reads to this directory)
+mkdir SNP_EVA
+
+#Move to SNP_EVA
+cd SNP_EVA
+
+#Add sratoolkit to your shell environment (replace the path marked in blue with the path you received with the pwd command in the previous step)
+export PATH=$PATH:/storage/home/mxm6884/work/SNP_EVA/programs/sratoolkit.2.10.9-ubuntu64/bin
+
+#To check if the sratoolkit path was added to the environment, check again:
+echo $PATH
+
+#In the SNP_EVA directory add 2 directories, one named 0_reads and the other named programs
+#0_reads will have the fastq sequences and programs folder will have all the programs needed for the analysis. To transfer the programs needed I can go to Dr. Kovac folder and take my all my programs and make a copy of these in this specific directory.
+
+#Create a directory 0_reads (we will download sequencing reads to this directory)
+mkdir 0_reads
+
+#Move to 0_reads
+cd 0_reads
+
+#Before starting to download files, we will enter the “tmux” mode, which will help us prevent interruptions to downloading process in case our shell or computer crash or go into sleep mode. Once in tmux mode, you will see a green bar at the bottom of your shell/terminal window.
+tmux
+
+#Download a sequence (from NCBI SRA) deposited under listed SRR accession numbers and split it in forward and reverse read files (108 sequences x2 216)
+
+fastq-dump --gzip --split-files SRR16764552 SRR16764554 SRR16764701 SRR16769412 SRR16770554 SRR16764683 SRR16764689 SRR16764602 SRR16764441 SRR16764589 SRR16764520 SRR16764587 SRR16764638 SRR16769425 SRR16769196 SRR16768628 SRR16769328 SRR16769323 SRR16764564 SRR16764432 SRR16764570 SRR16764545 SRR16764593 SRR16764643 SRR16764626 SRR16764472 SRR16770533 SRR16764547 SRR16764548 SRR16770573 SRR16770001 SRR16770585 SRR16770620 SRR16764640 SRR16764544 SRR16764572 SRR16764614 SRR16764692 SRR16764568 SRR16764535 SRR16764648 SRR16764590 SRR16765066 SRR16764473 SRR16764559 SRR16764562 SRR16764636 SRR16764556 SRR16764682 SRR16764637 SRR16764579 SRR16764697 SRR16770610 SRR16769974 SRR16769394 SRR16769416 SRR16769385 SRR16769403 SRR16769332 SRR16769434 SRR16764573 SRR16769379 SRR16769378 SRR16769998 SRR16764656 SRR16770579 SRR16769348 SRR16769980 SRR16769479 SRR16764578 SRR16764585 SRR16764582 SRR16769186 SRR16764627 SRR16769194 SRR16769333 SRR16769195 SRR16769433 SRR16769185 SRR16769480 SRR16770572 SRR16769409 SRR16769341 SRR16768673 SRR16769405 SRR16769451 SRR16770582 SRR16769357 SRR16770555 SRR16769437 SRR16769393 SRR16769435 SRR16770560 SRR16770593 SRR16770571 SRR16770602 SRR16769997 SRR16770530 SRR16769375 SRR16769349 SRR16769347 SRR16770578 SRR16769976 SRR16764481 SRR16764706 SRR16769376 SRR16764566 SRR16764478
+
+#Count the sequences available in the 0_reads folder
+ls | wc
+#Running Fastqc on a batch of sequences using a simple script
+
+#Open the script fastqc.sh to review it’s content 
+vim fastqc.sh
+
+#Enter INSERT mode in VIM and include what is highlighted
+i
+
+#Change the output
+#!/bin/bash
+#Usage: sh fastqc.sh <path to input files>
+#Note: provide a full path to the program
+
+cd $1
+
+for f in *.fastq.gz
+do
+/storage/home/mxm6884/work/SNP_EVA/programs/FastQC/fastqc $f -o /storage/home/work/SNP_EVA/SNP_fastqc
+done
+
+#Exit the INSERT mode with an ESC key
+
+#Save changes and exit VIM
+:wq
+
+#Enter tmux
+tmux
+
+#Run fastqc.sh script as suggested in the second line of sh trimmomatic.sh /storage/home/mxm6884/work/SNP_EVA/0_reads the script: #Usage: sh fastqc.sh <path to input files>
+#The input files are sequences that you downloaded from NCBI SRA and they are located in the 0_reads directory, hence we need to specify this directory
+#You need to run the script from the directory where it is saved, or provide a full path to the script location
+sh fastqc.sh /storage/home/mxm6884/work/SNP_EVA/0_reads 
+
+#Running Trimmomatic on a batch of sequences using a simple script
+
+#Trimmomatic - this program will be used to trim adapters and low-quality bases
+
+#Download Trimmomatic program to your programs directory and unzip it
+wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+
+#Unzip the program file
+unzip Trimmomatic-0.39.zip
+
+#Move to the directory with your sequences (0_reads) and run Trimmomatic on a single file 
+
+java -jar /storage/home/mxm6884/scratch/SNP_EVA/programs/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 20 -phred33 -trimlog log SRR16770530_1.fastq.gz SRR16770530_2.fastq.gz SRR16770530_1.trimmedP.fastq.gz SRR16770530_1.trimmedS.fastq.gz SRR16770530_2.trimmedP.fastq.gz SRR16770530_2.trimmedS.fastq.gz ILLUMINACLIP:/storage/home/mxm6884/work/SNP_EVA/programs/Trimmomatic-0.39/adapters/NexteraPE-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36
+
+#Instead of running Trimmomatic on individual files, we will now use a script that instructs the computer to run Trimmomatic program on every file in 0_reads directory that ends with “.fastq.gz” suffix
+
+#Once the script is in your 0_reads directory, open it with vim and replace the “jzk303” in the path to the program and the path to the adapters with your username
+vim trimmomatic.sh
+
+#Before running the script, enter tmux
+tmux
+
+#Request interactive access to a computing environment with the following resource requirements.
+qsub -I -A jzk303_b_g_bc_default -l nodes=1:ppn=20 -l pmem=4gb -l walltime=24:00:00
+
+#Run the trimmomatic.sh script
+sh trimmomatic.sh /storage/home/mxm6884/scratch/SNP_EVA/0_reads
+
+#I individually trimmed sequences because, during the batch run, sequences requiring significant space were not processed. Consequently, I transferred them from my working directory to my scratch directory.
+SRR16770533
+SRR16770554
+SRR16770555
+SRR16770560
+SRR16770571
+SRR16770572
+SRR16770573
+SRR16770578
+SRR16770579
+SRR16770582
+SRR16770585
+SRR16770593
+SRR16770602
+SRR16770610
+SRR16770620
+
+#Running SPAdes for de novo genome assembly on a single pair of sequences and on a batch of sequences using a script
+#cd to your program directory
+#Download SPAdes in your program directory
+
+wget https://cab.spbu.ru/files/release3.15.2/SPAdes-3.15.2-Linux.tar.gz 
+tar -xzf SPAdes-3.15.2-Linux.tar.gz 
+cd SPAdes-3.15.2-Linux/bin
+
+#Add SPAdes into your PATH variable before running the program (this will allow the computer to find the program when you want to use it) - DO NOT replace jzk303 with your username because you will need a program that is in my group directory
+export PATH=$PATH:/storage/home/mxm6884/scratch/SNP_EVA/program/SPAdes-3.15.2-Linux/bin
+
+#Run Spades on a single sequence
+python3 /storage/home/mxm6884/scratch/SNP_EVA/programs/SPAdes-3.15.2-Linux/bin/spades.py -k 21,33,55,77,99,127 --isolate -1 SRR16770530_1.trimmedP.fastq.gz -2 SRR16770530_2.trimmedP.fastq.gz -o SRR16770530 -t 4 
+
+#Run Spades on a Batch
+
+# Use a “cp” command to copy the script from the location listed above to your 0_eads directory 
+cp /gpfs/group/jzk303/default/spades.sh /gpfs/scratch/mxm6884/SNP_EVA/0_reads
+
+#if the script shows up empty then enter the file
+vim spades.sh
+
+#Press I to write
+#Include the following inside the file:
+#!/bin/bash
+#Usage: sh spades.sh <path to input files>
+
+cd $1
+
+for f in *_1.trimmedP.fastq.gz
+do
+if [ -d "${f%_1.trimmedP.fastq.gz}" ]
+then
+echo 'skip'${f}
+continue
+fi
+echo 'assemble' ${f%_1.trimmedP.fastq.gz}
+spades.py -k 99,127 --isolate -1 $f -2 ${f%_1.trimmedP.fastq.gz}_2.trimmedP.fastq.gz -o ${f%_1.trimmedP.fastq.gz} -t 20 -m 10;
+done
+
+mkdir contigs
+for f in *_1.trimmedP.fastq.gz
+do
+	cd ${f%_1.trimmedP.fastq.gz}
+	cat contigs.fasta > ${f%_1.trimmedP.fastq.gz}_contigs.fasta
+	cp ${f%_1.trimmedP.fastq.gz}_contigs.fasta ../contigs
+	cd ..;
+	done
+
+mkdir scaffolds
+for f in *_1.trimmedP.fastq.gz
+do
+	cd ${f%_1.trimmedP.fastq.gz}
+	cat scaffolds.fasta > ${f%_1.trimmedP.fastq.gz}_scaffolds.fasta
+	cp ${f%_1.trimmedP.fastq.gz}_scaffolds.fasta ../scaffolds
+	cd ..;
+done
+
+#Before running the script, enter tmux
+tmux
+
+#Run the spades script from 0_reads directory 
+sh spades.sh /gpfs/scratch/mxm6884/SNP_EVA/0_reads
+
+#You can check how many contigs are in the assembled genome using the following command (program grep searches for lines that start with a #> sign and the command wc (word count) counts them; the pipe sign | directs the output of the first part of the command grep ">" contigs.fasta #into wc)
+grep ">" contigs.fasta | wc
+
+Running QUAST for assembly quality control on a single pair of sequences and on a batch of sequences using a script
+#Move to 0_reads and then to contigs directory where all your assemblies should have been copied by the spades.sh script
+#Count the number of files that contain *contigs* in the name to verify that you have 33 assembled genomes
+ls *contigs* | wc
+
+#Verify that the files are not empty (file size should be ~5 Mb)
+ls -l
+
+#Run Quast from the directory “contigs” where your contigs are saved (within your 0_reads directory)
+
+#Program manual is available here: http://quast.sourceforge.net/docs/manual.html#sec1 
+
+#Running QUAST on a single sequence
+
+#We will run QUAST on the sequence SRR20230891_contigs.fasta and have it name the QUAST output directory (-o)  SRR16770530_quast_results
+#We will ask quast to consider only contigs that are longer than 500 to remove sequencing artifacts, which are usually less than 500 bp long (--min-contig 500)
+#We will each use 4 threads/processing units (--threads 4)
+#Lastly, we will provide the name of the assembly file at the end
+#OPTIONAL: You can use a reference genome for QUAST analysis; in that case, you would use an assembled reference; for example: -r /gpfs/group/jzk303/default/genomes/bacillus_cereus_ATCC_14579_TYPE_STRAIN.fna
+python /gpfs/group/jzk303/default/programs/quast-5.0.2/quast.py -o SRR16770530_quast_results  --min-contig 500 --threads 4 SRR16770530_contigs.fasta 
+
+#Review the results
+cd SRR16770530_quast_results
+vim  report.txt
+
+#Running QUAST on all contigs fasta files
+
+#Enter a tmux mode
+tmux
+python /gpfs/group/jzk303/default/programs/quast-5.0.2/quast.py -o quast_results  --min-contig 500 --threads 4 *_contigs.fasta 
+
+—Troubleshooting—
+#Download QUAST if the jzk303 pathway won’t work
+# First create a QUAST environment
+conda create -n Quast
+
+#Activate condo environment just created
+conda activate Quast
+
+#Enter a tmux mode
+tmux
+
+#Dowload the quast program
+conda install -c bioconda quast
+
+#Change to your configs directory
+
+#Run the quast program
+quast -o ./ *_contigs.fasta
+
+#Calculate the median total genome length, the median number of contigs larger than 500 bp, the median GC%, and the median N50
+#Are there any genomes that appear to be of substantially lower quality compare to calculated median values? 
+
+#Download to computer
+scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/scratch/SNP_EVA/0_reads .
+
+#Open the Icarus file
