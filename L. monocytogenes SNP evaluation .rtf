@@ -1,0 +1,528 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2759
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Oblique;\f2\fswiss\fcharset0 Helvetica-Bold;
+\f3\fnil\fcharset0 HelveticaNeue;\f4\fmodern\fcharset0 Courier;\f5\fswiss\fcharset0 Arial-BoldMT;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red246\green199\blue217;\red27\green27\blue27;
+\red254\green232\blue203;\red5\green68\blue254;\red0\green0\blue0;\red0\green0\blue0;\red254\green219\blue205;
+\red255\green255\blue255;\red222\green239\blue83;\red34\green45\blue53;\red202\green219\blue254;\red5\green61\blue204;
+\red217\green11\blue5;\red155\green44\blue3;\red255\green239\blue203;\red254\green232\blue203;\red12\green12\blue12;
+\red254\green219\blue205;\red217\green234\blue202;\red180\green36\blue25;\red24\green24\blue23;\red252\green39\blue18;
+\red198\green50\blue253;\red174\green0\blue240;\red221\green32\blue103;\red102\green177\blue50;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c97543\c82626\c87966;\cssrgb\c14118\c14118\c14118;
+\cssrgb\c100000\c92644\c83367;\cssrgb\c0\c38136\c99824;\csgray\c0;\csgray\c0\c0;\cssrgb\c100000\c88718\c84032;
+\cssrgb\c100000\c100000\c100000;\cssrgb\c89392\c93723\c39643;\cssrgb\c17647\c23137\c27059;\cssrgb\c82956\c88909\c99731;\cssrgb\c0\c33896\c83855;
+\cssrgb\c88946\c14202\c0;\cssrgb\c67803\c24280\c0;\cssrgb\c100000\c94750\c83363;\cssrgb\c100000\c92644\c83367;\cssrgb\c5098\c5098\c5098;
+\cssrgb\c100000\c88718\c84032;\cssrgb\c87817\c93001\c83061;\cssrgb\c76409\c21698\c12524;\cssrgb\c12549\c12157\c11765;\cssrgb\c100000\c25271\c7591;
+\cssrgb\c82670\c34053\c99466;\cssrgb\c74609\c21796\c95404;\cssrgb\c90234\c23206\c47866;\cssrgb\c46532\c73327\c25364;}
+\margl1440\margr1440\vieww16940\viewh12780\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs32 \cf2 \cb3 # 
+\f1\i \cf4 \expnd0\expndtw0\kerning0
+L. monocytogenes SNP evaluation\
+\pard\pardeftab720\partightenfactor0
+
+\f0\i0 \cf2 \cb5 \kerning1\expnd0\expndtw0 #Connect to Roar (change \'93\cf6 mxm6884\cf2 \'94 to your PSU username)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b \cf7 \cb1 \CocoaLigature0 ssh 
+\f0\b0 \cf6 \cb8 \CocoaLigature1 mxm6884
+\f2\b \cf7 \cb1 \CocoaLigature0 @submit.aci.ics.psu.edu\
+\pard\pardeftab720\partightenfactor0
+
+\f3\b0\fs26 \cf0 \cb9 \CocoaLigature1 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f0\fs32 \cf2 \cb5 \expnd0\expndtw0\kerning0
+#Create a directory to add all outputs of the sequences (we will download sequencing reads to this directory)\cb8 \
+
+\f2\b mkdir SNP_EVA
+\f0\b0 \
+\
+\cb5 #Move to SNP_EVA\
+
+\f2\b \cb8 cd SNP_EVA
+\f0\b0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb5 #Add sratoolkit to your shell environment (replace the path marked in blue with the path you received with the pwd command in the previous step)\cf4 \cb8 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf4 \cb10 export PATH=$PATH:\cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /storage/home/mxm6884/work/SNP_EVA\cf4 \cb10 \expnd0\expndtw0\kerning0
+\CocoaLigature1 /programs/sratoolkit.2.10.9-ubuntu64/bin\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\b0 \cf4 \cb8 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb5 #To check if the sratoolkit path was added to the environment, check again:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b \cf2 \cb8 echo $PATH
+\f0\b0 \cf4 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b \cf2 \
+
+\f0\b0 #In
+\f2\b  
+\f0\b0 the SNP_EVA directory add 2 directories, one named 0_reads and the other named programs\
+#0_reads will have the fastq sequences and programs folder will have all the programs needed for the analysis. To transfer the programs needed I can go to Dr. Kovac folder and take my all my programs and make a copy of these in this specific directory.\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf4 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb5 #Create a directory 0_reads (we will download sequencing reads to this directory)\
+
+\f2\b \cb8 mkdir 0_reads
+\f0\b0 \
+\
+#Move to 0_reads\
+
+\f2\b cd 0_reads
+\f0\b0 \
+\
+#Before starting to download files, we will enter the \'93tmux\'94 mode, which will help us prevent interruptions to downloading process in case our shell or computer crash or go into sleep mode. Once in tmux mode, you will see a green bar at the bottom of your shell/terminal window.\
+
+\f2\b tmux
+\f0\b0 \
+\
+\cb5 #Download a sequence (from NCBI SRA) deposited under listed SRR accession numbers and split it in forward and reverse read files \cf0 \cb3 \kerning1\expnd0\expndtw0 (108 sequences x2 216)\cf2 \cb8 \expnd0\expndtw0\kerning0
+\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf4 \cb11 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb10 fastq-dump --gzip --split-files\cf0 \cb9 \kerning1\expnd0\expndtw0  
+\f0\b0 SRR16764552 SRR16764554 SRR16764701 SRR16769412 SRR16770554 SRR16764683 SRR16764689 SRR16764602 SRR16764441 SRR16764589 SRR16764520 SRR16764587 SRR16764638 SRR16769425 SRR16769196 SRR16768628 SRR16769328 SRR16769323 SRR16764564 SRR16764432 SRR16764570 SRR16764545 SRR16764593 SRR16764643 SRR16764626 SRR16764472 SRR16770533 SRR16764547 SRR16764548 SRR16770573 SRR16770001 SRR16770585 SRR16770620 SRR16764640 SRR16764544 SRR16764572 SRR16764614 SRR16764692 SRR16764568 SRR16764535 SRR16764648 SRR16764590 SRR16765066 SRR16764473 SRR16764559 SRR16764562 SRR16764636 SRR16764556 SRR16764682 SRR16764637 SRR16764579 SRR16764697 SRR16770610 SRR16769974 SRR16769394 SRR16769416 SRR16769385 SRR16769403 SRR16769332 SRR16769434 SRR16764573 SRR16769379 SRR16769378 SRR16769998 SRR16764656 SRR16770579 SRR16769348 SRR16769980 SRR16769479 SRR16764578 SRR16764585 SRR16764582 SRR16769186 SRR16764627 SRR16769194 SRR16769333 SRR16769195 SRR16769433 SRR16769185 SRR16769480 SRR16770572 SRR16769409 SRR16769341 SRR16768673 SRR16769405 SRR16769451 SRR16770582 SRR16769357 SRR16770555 SRR16769437\cb1  \cb9 SRR16769393\cb1  \cb9 SRR16769435 SRR16770560 SRR16770593\cb1  \cb9 SRR16770571 SRR16770602 SRR16769997 SRR16770530 SRR16769375 SRR16769349 SRR16769347 SRR16770578 SRR16769976\cf4 \expnd0\expndtw0\kerning0
+ \cf0 \kerning1\expnd0\expndtw0 SRR16764481 SRR16764706 SRR16769376 SRR16764566 SRR16764478
+\f2\b \cf4 \cb10 \expnd0\expndtw0\kerning0
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf2 \cb8 #Count the sequences available in the 0_reads folder\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f2\b \cf12 \cb10 ls | wc\cf4 \
+
+\f1\i\b0 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 #Running Fastqc on a batch of sequences using a simple script\
+\pard\pardeftab720\partightenfactor0
+
+\f2\i0\b \cf4 \cb10 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f0\b0 \cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 #Open the script fastqc.sh to review it\'92s content \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b vim fastqc.sh\
+\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f0\b0 \cf2 #Enter INSERT mode in VIM and include what is highlighted
+\f2\b \
+i\
+
+\f0\b0 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb13 #Change the output\
+\pard\pardeftab720\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 #!/bin/bash\
+#Usage: sh fastqc.sh <path to input files>\
+#Note: provide a full path to the program\
+\
+cd $1\
+\
+for f in *.fastq.gz\
+do\
+/storage/home/mxm6884/work/SNP_EVA/programs/FastQC/fastqc $f -o /storage/home/work/SNP_EVA/SNP_fastqc\
+done
+\f4\fs26 \cb1 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b\fs32 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+
+\f0\b0 #Exit the INSERT mode with an ESC key
+\f2\b \
+\
+
+\f0\b0 #Save changes and exit VIM
+\f2\b \
+:wq
+\f0\b0 \cf7 \
+\
+#Enter tmux\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b tmux
+\f0\b0 \
+\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 #Run fastqc.sh script as suggested in the second line of 
+\f2\b \expnd0\expndtw0\kerning0
+\CocoaLigature1 sh trimmomatic.sh \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 /storage/home/\cf14 mxm6884\cf7 /work/SNP_EVA/0_reads
+\f0\b0 \cf2  the script: #Usage: sh fastqc.sh <path to input files>\
+#The input files are sequences that you downloaded from NCBI SRA and they are located in the 0_reads directory, hence we need to specify this directory\
+#You need to run the script from the directory where it is saved, or provide a full path to the script location\
+
+\f2\b sh fastqc.sh \cf7 /storage/home/\cf14 mxm6884\cf7 /work/SNP_EVA/0_reads
+\f0\b0 \cf2  
+\f2\b \cf7 \
+\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f0\b0 \cf2 \cb3 #Running Trimmomatic 
+\f1\i on a batch of sequences using a simple script\
+
+\f0\i0 \
+\pard\pardeftab720\partightenfactor0
+\cf7 \cb8 #Trimmomatic - this program will be used to trim adapters and low-quality bases\
+\
+#Download Trimmomatic program t\ul o your programs directory\ulnone  and unzip it\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+\f0\b0 \
+\
+#Unzip the program file\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b unzip Trimmomatic-0.39.zip
+\f0\b0 \cf15 \cb16 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf2 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb5 \kerning1\expnd0\expndtw0 \CocoaLigature0 #Move to the directory with your sequences (0_reads) and run Trimmomatic on a single file 
+\f2\b \cf4 \cb10 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\b0 \cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 java -jar /storage/home/mxm6884/scratch/SNP_EVA/programs/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 20 -phred33 -trimlog log SRR16770530_1.fastq.gz SRR16770530_2.fastq.gz SRR16770530_1.trimmedP.fastq.gz SRR16770530_1.trimmedS.fastq.gz SRR16770530_2.trimmedP.fastq.gz SRR16770530_2.trimmedS.fastq.gz ILLUMINACLIP:/storage/home/mxm6884/work/SNP_EVA/programs/Trimmomatic-0.39/adapters/NexteraPE-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36
+\f2\b \cb16 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\b0 \cb8 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+#Instead of running Trimmomatic on individual files, we will now use a script that instructs the computer to run Trimmomatic program on every file in 0_reads
+\f2\b  
+\f0\b0 directory that ends with \'93.fastq.gz\'94 suffix\cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb17 #Once the script is in your 
+\f2\b \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 0_reads
+\f0\b0 \cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1  directory, open it with vim and \ul replace the \'93jzk303\'94 in the path to the program and the path to the adapter\ulnone s with your username\cb9 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b \cf2 \cb1 vim trimmomatic.sh
+\f0\b0 \
+\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb5 #Before running the script, enter tmux\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b \cf2 \cb1 tmux
+\f0\b0 \
+\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb18 #
+\f3 \cf19 \outl0\strokewidth0 \strokec19 Request interactive access to a computing environment with the following resource requirements.
+\f0 \cf2 \cb1 \outl0\strokewidth0 \
+qsub -I -A jzk303_b_g_bc_default -l nodes=1:ppn=20 -l pmem=4gb -l walltime=24:00:00\
+\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb5 #Run the trimmomatic.sh script\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b \cf2 \cb1 sh trimmomatic.sh \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 /storage/home/mxm6884/scratch/SNP_EVA/0_reads\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 \cb9 \CocoaLigature1 #
+\f3 \cf19 \cb20 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec19 I individually trimmed sequences because, during the batch run, sequences requiring significant space were not processed. Consequently, I transferred them from my working directory to my scratch directory.
+\f0 \cf0 \cb9 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+SRR16770533\cb8 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf2 \cb9 \CocoaLigature0 SRR16770554\cb8 \
+\cb9 SRR16770555\cb8 \
+\cb9 SRR16770560\cb8 \
+\cb9 SRR16770571\cb8 \
+\cb9 SRR16770572\cb8 \
+\cb9 SRR16770573\cb8 \
+\cb9 SRR16770578\cb8 \
+\cb9 SRR16770579\cb8 \
+\cb9 SRR16770582\cb8 \
+\cb9 SRR16770585\cb8 \
+\cb9 SRR16770593\cb8 \
+\cb9 SRR16770602\cb8 \
+\cb9 SRR16770610\cb8 \
+\cb9 SRR16770620
+\f2\b \cf7 \cb1 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\i\b0 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 #Running SPAdes for de novo genome assembly on a single pair of sequences and on a batch of sequences using a script\
+\pard\pardeftab720\partightenfactor0
+
+\f0\i0 \cf2 \cb8 #cd to your program directory\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb5 #Download SPAdes in your program directory\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb8 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf0 \cb21 wget https://cab.spbu.ru/files/release3.15.2/SPAdes-3.15.2-Linux.tar.gz \
+tar -xzf SPAdes-3.15.2-Linux.tar.gz \
+cd SPAdes-3.15.2-Linux/bin
+\f0\b0 \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb8 \
+#Add SPAdes into your PATH variable before running the program (this will allow the computer to find the program when you want to use it) - DO NOT replace jzk303 with your username because you will need a program that is in my group directory\cf7 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 export PATH=$PATH:\cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /storage/home/mxm6884/scratch/SNP_EVA/program\cb8 /SPAdes-3.15.2-Linux/bin\cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\i \cf2 \cb5 #Run Spades on a single sequence\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\i0\b \cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 python3 /storage/home/mxm6884/scratch/SNP_EVA/programs/SPAdes-3.15.2-Linux/bin/spades.py -k 21,33,55,77,99,127 --isolate -1 SRR16770530_1.trimmedP.fastq.gz -2 SRR16770530_2.trimmedP.fastq.gz -o SRR16770530 -t 4 \cf22 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\b0 \cf22 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\i \cf7 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 #Run Spades on a Batch\
+\pard\pardeftab720\partightenfactor0
+
+\f0\i0 \cf2 \cb8 \
+\pard\pardeftab720\partightenfactor0
+\cf23 \cb1 # Use a \'93cp\'94 command to copy the script from the location listed above to your 
+\f2\b \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 0_eads 
+\f0\b0 \cf23 \expnd0\expndtw0\kerning0
+\CocoaLigature1 directory \cf2 \cb8 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf2 cp \cf23 \cb1 /gpfs/group/jzk303/default/spades.sh \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 /gpfs/scratch/mxm6884/SNP_EVA/0_reads\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf2 \cb8 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 #if the script shows up empty then enter the file\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b vim spades.sh\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \
+#Press I to write\
+#Include the following inside the file:\
+\pard\pardeftab720\partightenfactor0
+\cb13 #!/bin/bash\
+#Usage: sh spades.sh <path to input files>\
+\
+cd $1\
+\
+for f in *_1.trimmedP.fastq.gz\
+do\
+if [ -d "$\{f%_1.trimmedP.fastq.gz\}" ]\
+then\
+echo 'skip'$\{f\}\
+continue\
+fi\
+echo 'assemble' $\{f%_1.trimmedP.fastq.gz\}\
+spades.py -k 99,127 --isolate -1 $f -2 $\{f%_1.trimmedP.fastq.gz\}_2.trimmedP.fastq.gz -o $\{f%_1.trimmedP.fastq.gz\} -t 20 -m 10;\
+done\
+\
+mkdir contigs\
+for f in *_1.trimmedP.fastq.gz\
+do\
+	cd $\{f%_1.trimmedP.fastq.gz\}\
+	cat contigs.fasta > $\{f%_1.trimmedP.fastq.gz\}_contigs.fasta\
+	cp $\{f%_1.trimmedP.fastq.gz\}_contigs.fasta ../contigs\
+	cd ..;\
+	done\
+\
+mkdir scaffolds\
+for f in *_1.trimmedP.fastq.gz\
+do\
+	cd $\{f%_1.trimmedP.fastq.gz\}\
+	cat scaffolds.fasta > $\{f%_1.trimmedP.fastq.gz\}_scaffolds.fasta\
+	cp $\{f%_1.trimmedP.fastq.gz\}_scaffolds.fasta ../scaffolds\
+	cd ..;\
+done\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+#Before running the script, enter tmux\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf2 tmux\
+\pard\pardeftab720\partightenfactor0
+\cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf2 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 #Run the spades script from 
+\f2\b \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 0_reads
+\f0\b0 \cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1  directory \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 sh \cf23 \expnd0\expndtw0\kerning0
+\CocoaLigature1 spades.sh \cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 /gpfs/scratch/mxm6884/SNP_EVA/0_reads\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\b0 \cf2 \cb21 #You can check how many contigs are in the assembled genome using the following command (program grep searches for lines that start with a #> sign and the command wc (word count) counts them; the pipe sign | directs the output of the first part of the command \cf7 grep ">" contigs.fasta #into wc)\cf2 \
+
+\f2\b \cf7 grep ">" contigs.fasta | wc
+\f0\b0 \cb8 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\i \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 Running QUAST for assembly quality control on a single pair of sequences and on a batch of sequences using a script\cf7 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\i0 \cf2 \cb8 #Move to 0_reads and then to contigs directory where all your assemblies should have been copied by the spades.sh script\
+#Count the number of files that contain *contigs* in the name to verify that you have 33 assembled genomes\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf2 ls *contigs* | wc\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf2 \
+#Verify that the files are not empty (file size should be ~5 Mb)\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf2 ls -l\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf2 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 #Run Quast from the directory \'93contigs\'94 where your contigs are saved (within your 0_reads directory)\cf7 \cb1 \
+\
+#Program manual is available here: http://quast.sourceforge.net/docs/manual.html#sec1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\i \cf2 \cb8 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb5 #Running QUAST on a single sequence\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f0\i0 \cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+#We will run QUAST on the sequence 
+\f2\b \cf24 SRR20230891_contigs.fasta
+\f0\b0 \cf2 \cb8  and have it \cf7 \cb1 name the QUAST output directory (-o) 
+\f2\b  
+\f0\b0 SRR16770530\cf2 \cb8 _quast_results\
+#We will ask quast to consider only contigs that are longer than 500 to remove sequencing artifacts, which are usually less than 500 bp long (--min-contig 500)\
+#We will each use 4 threads/processing units (--threads 4)\
+#Lastly, we will provide the name of the assembly file at the end\
+#OPTIONAL: You can use a reference genome for QUAST analysis; in that case, you would use an assembled reference; for example: \cf25 -r \cf2 /gpfs/group/jzk303/default/genomes/bacillus_cereus_ATCC_14579_TYPE_STRAIN.fna\cf7 \cb1 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b \cf2 \cb8 python \cf7 /gpfs/group/jzk303/default/programs/\cb1 quast-5.0.2/\cf2 \cb8 quast.py \cf26 -o\cf2  \cf7 \cb1 SRR16770530\cf2 \cb8 _quast_results  \cf26 --min-contig\cf2  500 \cf26 --threads\cf2  4\cf27  \cf7 \cb1 SRR16770530\cf27 \cb8 _contigs.fasta 
+\f0\b0 \cf2 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf7 \
+#Review the results\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b cd 
+\f5 \cb1 SRR16770530\cf2 \cb8 _quast_results
+\f2 \
+vim \cf7  report.txt
+\f0\b0 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\i \cb5 #Running QUAST on all contigs fasta files
+\f2\i0\b \cf26 \cb8 \
+
+\f1\i\b0 \cf7 \cb5 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\i0 \cb1 #Enter a tmux mode\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b tmux
+\f0\b0 \
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+
+\f2\b \cf2 \cb8 python \cf7 /gpfs/group/jzk303/default/programs/\cb1 quast-5.0.2/\cf2 \cb8 quast.py \cf26 -o\cf2  quast_results  \cf26 --min-contig\cf2  500 \cf26 --threads\cf2  4\cf27  *_contigs.fasta 
+\f0\b0 \cf2 \
+\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb21 \'97Troubleshooting\'97\
+\pard\pardeftab720\qj\parhyphenfactor20\partightenfactor0
+\cf2 \cb8 #Download QUAST if the jzk303 pathway won\'92t work\
+# First create a QUAST environment\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b \cf7 \cb1 conda create -n Quast\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\b0 \
+#Activate condo environment just created\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b conda activate Quast
+\f0\b0 \
+\
+\pard\pardeftab720\partightenfactor0
+#Enter a tmux mode\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b tmux\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+#Dowload the quast program\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b conda install -c bioconda quast\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\b0 \
+#Change to your configs directory\
+\
+#Run the quast program\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b quast -o ./ *_contigs.fasta
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+\
+#Calculate the median total genome length, the median number of contigs larger than 500 bp, the median GC%, and the median N50\
+#Are there any genomes that appear to be of substantially lower quality compare to calculated median values? \
+\
+#Download to computer\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f2\b \cf2 scp -r mxm6884@submit.aci.ics.psu.edu:\cf7 /storage/home/mxm6884/scratch/SNP_EVA/0_reads\cf2  .\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf7 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf28 \cb8 #Open the Icarus file}
