@@ -1,0 +1,375 @@
+How to search for SRR accession number in NCBI
+#Google NCBI (National Library of Medicine) in the search bar include the code designated to the sample of interest. In the tab next to the search bar select SRA. Press enter. In that page the SRR number and other information will be available.
+PDA Project:
+Download sequences
+#Connect to Roar (change “mxm6884” to your PSU username)
+ssh mxm6884@submit.aci.ics.psu.edu
+
+#Create a directory Lmono_samples folder (we will download sequencing reads to this directory)
+mkdir Lmono_samples
+
+#Move to 0_reads
+cd Lmono_samples
+
+#Create a directory inside the Lmono_samples folder (we will download programs  to this directory)
+mkdir programs
+
+#Move to 0_reads
+cd programs
+
+#Inside the programs directory download the sratoolkit
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.10.9/sratoolkit.2.10.9-ubuntu64.tar.gz
+
+#Remove sratoolkit.2.10.9-ubuntu64.tar.gz file from the programs directory
+rm sratoolkit.2.10.9-ubuntu64.tar.gz
+
+#To check if the sratoolkit path was added to the environment, check again:
+echo $PATH
+
+#Go to the bin directory by changing directory to sratoolkit.2.10.9-ubuntu64
+cd sratoolkit.2.10.9-ubuntu64
+cd bin
+#Identify the path to the bin directory
+pwd
+
+#Add sratoolkit to your shell environment (replace the path marked in blue with the path you received with the pwd command in the previous step)
+export PATH=$PATH:/storage/home/mxm6884/work/Lmono_samples/programs/sratoolkit.2.10.9-ubuntu64/bin
+
+#Create a directory a directory inside the Lmono_samples (we will download sequencing reads to this directory)
+mkdir 0_reads
+
+#Move to 0_reads
+cd 0_reads
+
+#Before starting to download files, we will enter the “tmux” mode, which will help us prevent interruptions to downloading process in case our shell or computer crash or go into sleep mode. Once in tmux mode, you will see a green bar at the bottom of your shell/terminal window.
+tmux
+
+#Download a sequence (from NCBI SRA) deposited under listed SRR accession numbers and split it in forward and reverse read files
+fastq-dump --gzip --split-files SRR20230914 
+#Download a sequence (from NCBI SRA) deposited under listed SRR accession numbers and split it in forward and reverse read files
+fastq-dump --gzip --split-files SRR20230913 SRR20230902 SRR20230897 SRR20230896 SRR20230895 SRR20230912 SRR20230893 SRR20230892 SRR20230891 SRR20230894 SRR20634929 SRR20634927 SRR20230911 SRR20230910 SRR20230909 SRR20230908 SRR20230907 SRR20230906 SRR20230905 SRR20230901 SRR20230900 SRR20230899 SRR20230898 SRR20230904 SRR20230903 SRR20634907 SRR20634903 SRR20634901 SRR20634898 SRR20634896 SRR20634893 SRR20634891 SRR20634889 SRR20634926 SRR20634924 SRR20634922 SRR20634920 SRR20634918 SRR20634916 SRR20634914 SRR20634912 SRR20634911 SRR20634909 SRR20634905
+
+#Count the sequences available in the 0_reads folder
+ls | wc
+Run FASTQC
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+
+unzip fastqc_v0.11.9.zip
+
+#Change the access permissions so you can run the program (775 means that you and your collaborators will have read/write/execute permission, but everyone else will have just read/write permission; make sure you change mxm6884 with your username)
+chmod -R 775 /storage/home/mxm6884/work/Lmono_samples/programs/FastQC
+
+#Create a directory for FastQC results (in the Lmono_samples directory) 
+mkdir Fastqc
+
+#Move to the directory with sequencing reads (i.e., directory 0_reads)
+cd 0_reads
+
+#Run FastQC on a single file. Output files will be saved in Fastqc. One of the output files will be an html file that you can download onto your computer and open in a web browser
+/storage/home/mxm6884/work/Lmono_samples/programs/FastQC/fastqc SRR20230914_1.fastq.gz -o /storage/home/mxm6884/work/Lmono_samples/Fastqc
+
+/storage/home/mxm6884/work/Lmono_samples/programs/FastQC/fastqc SRR20230914_2.fastq.gz -o /storage/home/mxm6884/work/Lmono_samples/Fastqc
+
+#Download the fastqc output files to your computer and open view the html files in your web browser (Windows users need to use WinSCP: https://winscp.net/eng/index.php; Mac users need to use the Terminal as described below):
+#Open a new Terminal window and move to Downloads on folder on your Mac computer, then copy the file from Roar to your computer’s Downloads folder
+cd Downloads
+
+scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/0_reads/Fastqz .
+
+#Now you can look for a folder “1_fastqc” in the Downloads folder on your computer. Open (in a web browser) and review these 2 files: SRR20230914_1_fastqc.html and SRR20230914_2_fastqc.html
+
+#Running FASTQC on a batch of sequences using a simple script 
+#Instead of running fastqc on individual files, we will now use a script that instructs the computer to run fastqc program on every file in 0_reads directory that ends with “.fastq.gz” suffix
+
+#Copy the script named fastqc.sh from from /gpfs/group/jzk303/default/fastqc.sh to your Lmono_samples directory (don’t change the jzk303 in this path, because the script is saved in the jzk303’s group directory)
+cp /gpfs/group/jzk303/default/fastqc.sh /storage/home/mxm6884/work/Lmono_samples
+
+#Open the script fastqc.sh to review it’s content 
+vim fastqc.sh
+
+#Enter INSERT mode in VIM
+i
+
+#In the script, replace two instances of jzk303 with your username
+
+#Exit the INSERT mode with an ESC key
+
+#Save changes and exit VIM
+:wq
+
+#Enter tmux
+tmux
+
+#Run fastqc.sh script as suggested in the second line of the script: #Usage: sh fastqc.sh <path to input files>
+#The input files are sequences that you downloaded from NCBI SRA and they are located in the 0_reads directory, hence we need to specify this directory
+#You need to run the script from the directory where it is saved, or provide a full path to the script location
+sh fastqc.sh /storage/home/mxm6884/work/Lmono_samples/0_reads
+
+
+#Installing Trimmomatic
+
+#Trimmomatic - this program will be used to trim adapters and low-quality bases
+#Download Trimmomatic program to your programs directory and unzip it
+wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+
+#Unzip the program file
+unzip Trimmomatic-0.39.zip
+
+#Change the permissions for program files to rwxrwxr-x 
+chmod -R 775 /storage/home/mxm6884/work/Lmono_samples/programs/Trimmomatic-0.39
+
+#Move to the directory with your sequences (0_reads) and run Trimmomatic on a single file 
+java -jar /storage/home/mxm6884/work/Lmono_samples/programs/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 4 -phred33 -trimlog log SRR20230914_1.fastq.gz SRR20230914_2.fastq.gz SRR20230914_1.trimmedP.fastq.gz SRR20230914_1.trimmedS.fastq.gz SRR20230914_2.trimmedP.fastq.gz SRR20230914_2.trimmedS.fastq.gz ILLUMINACLIP:/storage/home/mxm6884/work/Lmono_samples/programs/Trimmomatic-0.39/adapters/NexteraPE-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36
+
+#Running Trimmomatic on a batch of sequences using a script
+
+#Instead of running Trimmomatic on individual files, we will now use a script that instructs the computer to run Trimmomatic program on every file in 0_reads directory that ends with “.fastq.gz” suffix
+
+#Copy the script named trimmomatic.sh from /gpfs/group/jzk303/default/trimmomatic.sh to your Lmono_samples directory (don’t change the jzk303 in this path, because the script is saved in the jzk303’s group directory)
+cp /gpfs/group/jzk303/default/trimmomatic.sh /storage/home/mxm6884/work/Lmono_samples
+
+#Once the script is in your Lmono_samples directory, open it with vim and replace the “jzk303” in the path to the program and the path to the adapters with your username
+
+vim trimmomatic.sh
+
+#Before running the script, enter tmux
+tmux
+
+#Run the trimmomatic.sh script
+sh trimmomatic.sh /storage/home/mxm6884/work/Lmono_samples/0_reads
+
+cp /gpfs/group/jzk303/default/spades.sh /storage/home/mxm6884/work/Lmono_samples
+
+scp -r mxm6884@submit.aci.ics.psu.edu:scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/Fastqc/Microbiome Script.R .
+ 
+#Running SPAdes for de novo genome assembly on a single pair of sequences and on a batch of sequences using a script
+#cd to your program directory
+#Download SPAdes in your program directory
+
+wget https://cab.spbu.ru/files/release3.15.2/SPAdes-3.15.2-Linux.tar.gz 
+tar -xzf SPAdes-3.15.2-Linux.tar.gz 
+cd SPAdes-3.15.2-Linux/bin
+
+#Add SPAdes into your PATH variable before running the program (this will allow the computer to find the program when you want to use it) - DO NOT replace jzk303 with your username because you will need a program that is in my group directory
+export PATH=$PATH:/storage/home/mxm6884/work/Lmono_samples/program/SPAdes-3.15.2-Linux/bin
+
+#Run Spades on a single sequence
+
+python3 /storage/home/mxm6884/work/Lmono_samples/programs/SPAdes-3.15.2-Linux/bin/spades.py -k 21,33,55,77,99,127 --isolate -1 SRR20230899_1.trimmedP.fastq.gz -2 SRR20230899_2.trimmedP.fastq.gz -o SRR20230898 -t 4
+
+#Run Spades on a Batch
+
+# Use a “cp” command to copy the script from the location listed above to your 0_reads directory 
+cp /gpfs/group/jzk303/default/spades.sh /storage/home/mxm6884/work/Lmono_samples/0_reads
+
+#If that doesn’t work, use the “cp” command to copy the script from the location listed above to your FDSC517 directory
+cp /storage/home/mxm6884/work/FDSC517/spades.sh . 
+
+#if the script shows up empty then enter the file
+vim spades.sh
+
+#Press I to write
+#Include the following inside the file:
+#!/bin/bash
+#Usage: sh spades.sh <path to input files>
+
+cd $1
+
+for f in *_1.trimmedP.fastq.gz
+do
+if [ -d "${f%_1.trimmedP.fastq.gz}" ]
+then
+echo 'skip'${f}
+continue
+fi
+echo 'assemble' ${f%_1.trimmedP.fastq.gz}
+spades.py -k 99,127 --isolate -1 $f -2 ${f%_1.trimmedP.fastq.gz}_2.trimmedP.fastq.gz -o ${f%_1.trimmedP.fastq.gz} -t 20 -m 10;
+done
+
+mkdir contigs
+for f in *_1.trimmedP.fastq.gz
+do
+	cd ${f%_1.trimmedP.fastq.gz}
+	cat contigs.fasta > ${f%_1.trimmedP.fastq.gz}_contigs.fasta
+	cp ${f%_1.trimmedP.fastq.gz}_contigs.fasta ../contigs
+	cd ..;
+	done
+
+mkdir scaffolds
+for f in *_1.trimmedP.fastq.gz
+do
+	cd ${f%_1.trimmedP.fastq.gz}
+	cat scaffolds.fasta > ${f%_1.trimmedP.fastq.gz}_scaffolds.fasta
+	cp ${f%_1.trimmedP.fastq.gz}_scaffolds.fasta ../scaffolds
+	cd ..;
+done
+
+#Run the spades script from 0_reads directory (replace the path highlighted in blue with the path to your trimmedP files)
+tmux
+sh spades.sh /storage/home/mxm6884/work/Lmono_samples/0_reads
+
+#You can check how many contigs are in the assembled genome using the following command (program grep searches for lines that start with a #> sign and the command wc (word count) counts them; the pipe sign | directs the output of the first part of the command grep ">" contigs.fasta #into wc)
+grep ">" contigs.fasta | wc
+
+Running QUAST for assembly quality control on a single pair of sequences and on a batch of sequences using a script
+#Move to 0_reads and then to contigs directory where all your assemblies should have been copied by the spades.sh script
+#Count the number of files that contain *contigs* in the name to verify that you have 45 assembled genomes
+ls *contigs* | wc
+
+#Verify that the files are not empty (file size should be ~5 Mb)
+ls -l
+
+#Program manual is available here: http://quast.sourceforge.net/docs/manual.html#sec1 
+
+#Running QUAST on a single sequence
+
+#We will run QUAST on the sequence SRR20230891_contigs.fasta and have it name the QUAST output directory (-o) SRR6825046_quast_results
+#We will ask quast to consider only contigs that are longer than 500 to remove sequencing artifacts, which are usually less than 500 bp long (--min-contig 500)
+#We will each use 4 threads/processing units (--threads 4)
+#Lastly, we will provide the name of the assembly file at the end
+#OPTIONAL: You can use a reference genome for QUAST analysis; in that case, you would use an assembled reference; for example: -r /gpfs/group/jzk303/default/genomes/bacillus_cereus_ATCC_14579_TYPE_STRAIN.fna
+python /gpfs/group/jzk303/default/programs/quast-5.0.2/quast.py -o SRR20230891_quast_results  --min-contig 500 --threads 4 SRR20230891_contigs.fasta 
+
+#Review the results
+cd SRR20230891_quast_results
+vim  report.txt
+
+#Running QUAST on all contigs fasta files
+#Enter a tmux mode
+tmux
+python /gpfs/group/jzk303/default/programs/quast-5.0.2/quast.py -o quast_results  --min-contig 500 --threads 4 *_contigs.fasta 
+
+#The file with all quast results is in quast_results output directory and is named report.txt
+#Download the “quast_results” directory onto your computer and review the results (remember, if you are a Mac user, you need to open a new Terminal window on your personal computer, move to Downloads and use scp -r command to copy the directory from Roar to your computer’s Downloads folder)
+
+#Once you have the quast_results directory on your personal computer, open the “report.txt” in Excel and use Data/Text-to-Columns function to separate results for each genome in separate columns
+
+#Calculate the median total genome length, the median number of contigs larger than 500 bp, the median GC%, and the median N50
+
+#Download to computer
+scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/0_reads/contigs/quast_results .
+#Open the Icarus file
+####Install conda (package management system) into your WORK directory (cd to your work directory, then use the wget command listed below)
+wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
+
+bash Miniconda2-latest-Linux-x86_64.sh 
+
+#When asked to review the license agreement, press ENTER until you get to the end of the license agreement; then type “yes” and hit enter in the Terminal
+
+#WHEN asked, where to install conda, list the following path: /storage/work/mxm6884/miniconda2
+#If asked if you wish the installer to initialize Miniconda2 by running conda init; type in yes
+#Once installed, logout from Roar (type in logout in the Terminal)
+#Login to Roar again
+
+#load bashrc to activate conda:
+source ~/.bashrc
+
+#You will know that the previous command worked if “(base)” appeared before your username in the Terminal; example: (base) [mxm6884@submit-009 work]$
+
+#Update conda to make sure you are using the latest version
+
+conda update conda
+
+#When told which packages will be updated and asked if you wish to proceed, type:
+yes
+
+#test conda by typing
+conda --help
+
+Activate Miniconda3
+
+#activate the miniconda environment.
+source /storage/home/mxm6884/work/miniconda2/bin/activate
+
+#Activate conda correctly:
+module load anaconda3
+conda init bash
+
+#Deactivate conda
+conda deactivate
+
+
+Running Abbricate on all sequences to detect antimicrobial resistance genes
+#Install Abricate using conda (installation will take ~10 min)
+conda create -n abricate
+conda activate abricate
+conda install -c conda-forge -c bioconda -c defaults abricate
+
+#To activate this environment, use
+conda activate abricate
+
+# To deactivate an active environment, use
+conda deactivate
+
+#Test the installation (you should see OK in the last line of the output) 
+abricate --check
+#Option #1
+#Combining reports across samples
+abricate --db megares *.fasta >abricatetest.tab
+abricate --summary abricatetest.tab > summary.tab
+
+#Option #2
+#Get the reports for each sample
+abricate --db megares --quiet SRR20230891_contigs.fasta > SRR20230891_abricate.tab
+
+#Use the Abricate manual (https://github.com/tseemann/abricate) to develop a command to run Abricate on all seq
+mkdir Abbricate_Lmono
+
+#Download to computer the abricate summary
+scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/0_reads/contigs/summary.tab .
+
+#Running kSNP3 to detect SNPs
+#kSNP3 and its dependencies were installed on Roar in a module (a package of code that can be loaded and unloaded). 
+#The module is named “cfsan-snp”; it is named after another program it contains
+#We will first specify where the module is located
+
+#Install KSNPs using wget, unzip the KSNP package and set KSNP paths:
+wget https://sourceforge.net/projects/ksnp/files/kSNP3.1_Linux_package.zip
+unzip kSNP3.1_Linux_package.zip
+vim ~/.bashrc
+export PATH=$PATH:$/current_path/kSNP3.1_Linux_package/kSNP3
+source ~/.bashrc
+vim /current_path/kSNP3.1_Linux_package/kSNP3
+set kSNP=/usr/local/kSNP3
+set kSNP=/home/lhl/tools/kSNP3.1_Linux_package/kSNP3
+export PATH=/current_path/kSNP3.1_Linux_package/kSNP3:$PATH
+
+tmux
+
+#Upload the enlist of all the contigs
+scp Lmono_inlist mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/0_reads/contigs .
+
+#Run KSNP3 in Lmono_samples directory:
+kSNP3 -in /storage/home/mxm6884/work/Lmono_samples/Lmono_inlist -outdir Lmono_ksnp3_out -k 21 -core -CPU 4 -ML 
+
+Running RaXML
+
+#within ksnp3_out directory, create a directory named raxmlLmono
+#copy SNPs file named core_SNPs_matrix.fasta in the raxmlLmono directory
+cp core_SNPs_matrix.fasta raxmlLmono/
+#cd to to raxml directory
+
+tmux
+
+##Activate RaXML
+#Option #1
+conda activate raxml
+
+#Option #2
+conda activate /storage/work/m/mxm6884/miniconda2/envs/raxml
+
+#Run RAxML (manual is available here: https://cme.h-its.org/exelixis/web/software/raxml/) 
+### -f a, rapid bootstrap analysis and search for best­scoring ML tree in one program run
+### -x rapid bootstrap random seed
+### -m GTR model with ascertainment correction
+### -p parsimony random seed 
+### -N number of bootstraps (for publication, it is recommended to have 500 - 700 bootstraps; in the class, we will run raxml with 100 bootstraps due to limited compute resources)
+### -s input fasta file
+### -n output tree file
+### --asc-cor-lewis ascertainment bias correction using lewis method 
+
+raxmlHPC -f a -x 165 -m ASC_GTRGAMMA --asc-corr=lewis -p 596 -N 500 -s core_SNPs_matrix.fasta -n ASC_core_SNPs.tre
+
+###Download file for the Tree
+scp mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/Lmono_ksnp3_out/raxmlLmono/RAxML_bipartitions.ASC_core_SNPs.tre .
+
