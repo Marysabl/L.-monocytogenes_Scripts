@@ -1,6 +1,4 @@
 # L. monocytogenes SNP evaluation
-#Connect to Roar (change “mxm6884” to your PSU username)
-ssh mxm6884@submit.aci.ics.psu.edu
 
 #Create a directory to add all outputs of the sequences (we will download sequencing reads to this directory)
 mkdir SNP_EVA
@@ -229,8 +227,3 @@ quast -o ./ *_contigs.fasta
 
 #Calculate the median total genome length, the median number of contigs larger than 500 bp, the median GC%, and the median N50
 #Are there any genomes that appear to be of substantially lower quality compare to calculated median values? 
-
-#Download to computer
-scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/scratch/SNP_EVA/0_reads .
-
-#Open the Icarus file
