@@ -2,8 +2,6 @@ How to search for SRR accession number in NCBI
 #Google NCBI (National Library of Medicine) in the search bar include the code designated to the sample of interest. In the tab next to the search bar select SRA. Press enter. In that page the SRR number and other information will be available.
 PDA Project:
 Download sequences
-#Connect to Roar (change “mxm6884” to your PSU username)
-ssh mxm6884@submit.aci.ics.psu.edu
 
 #Create a directory Lmono_samples folder (we will download sequencing reads to this directory)
 mkdir Lmono_samples
@@ -246,8 +244,6 @@ python /gpfs/group/jzk303/default/programs/quast-5.0.2/quast.py -o quast_results
 
 #Calculate the median total genome length, the median number of contigs larger than 500 bp, the median GC%, and the median N50
 
-#Download to computer
-scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/0_reads/contigs/quast_results .
 #Open the Icarus file
 ####Install conda (package management system) into your WORK directory (cd to your work directory, then use the wget command listed below)
 wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
@@ -315,8 +311,7 @@ abricate --db megares --quiet SRR20230891_contigs.fasta > SRR20230891_abricate.t
 #Use the Abricate manual (https://github.com/tseemann/abricate) to develop a command to run Abricate on all seq
 mkdir Abbricate_Lmono
 
-#Download to computer the abricate summary
-scp -r mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/0_reads/contigs/summary.tab .
+#Download to computer the abricate summary using the scp -r command
 
 #Running kSNP3 to detect SNPs
 #kSNP3 and its dependencies were installed on Roar in a module (a package of code that can be loaded and unloaded). 
@@ -336,8 +331,7 @@ export PATH=/current_path/kSNP3.1_Linux_package/kSNP3:$PATH
 
 tmux
 
-#Upload the enlist of all the contigs
-scp Lmono_inlist mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/0_reads/contigs .
+#Upload the enlist of all the contigs using scp command
 
 #Run KSNP3 in Lmono_samples directory:
 kSNP3 -in /storage/home/mxm6884/work/Lmono_samples/Lmono_inlist -outdir Lmono_ksnp3_out -k 21 -core -CPU 4 -ML 
@@ -356,7 +350,7 @@ tmux
 conda activate raxml
 
 #Option #2
-conda activate /storage/work/m/mxm6884/miniconda2/envs/raxml
+conda activate pathway were the raxml enviroment is located
 
 #Run RAxML (manual is available here: https://cme.h-its.org/exelixis/web/software/raxml/) 
 ### -f a, rapid bootstrap analysis and search for best­scoring ML tree in one program run
@@ -370,6 +364,4 @@ conda activate /storage/work/m/mxm6884/miniconda2/envs/raxml
 
 raxmlHPC -f a -x 165 -m ASC_GTRGAMMA --asc-corr=lewis -p 596 -N 500 -s core_SNPs_matrix.fasta -n ASC_core_SNPs.tre
 
-###Download file for the Tree
-scp mxm6884@submit.aci.ics.psu.edu:/storage/home/mxm6884/work/Lmono_samples/Lmono_ksnp3_out/raxmlLmono/RAxML_bipartitions.ASC_core_SNPs.tre .
-
+###Download file for the Tree the RAxML_bipartitions.ASC_core_SNPs.tre file and analyse the tree
